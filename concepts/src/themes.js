@@ -62,7 +62,7 @@ window.THEME=(function(){
         if(Math.random()<.25){x.strokeStyle=`rgba(255,240,210,${.15*f})`;x.lineWidth=1;const sx=Math.random()*W;x.beginPath();x.moveTo(sx,0);x.lineTo(sx+Math.random()*6-3,H);x.stroke()}}
       const v=x.createRadialGradient(W/2,H/2,Math.min(W,H)*.25,W/2,H/2,Math.max(W,H)*.72);v.addColorStop(0,'rgba(0,0,0,0)');v.addColorStop(1,`rgba(0,0,0,${.75-.35*c})`);x.fillStyle=v;x.fillRect(0,0,W,H);
       const lb=H*.07*(1-c*.6);x.fillStyle='#000';x.fillRect(0,0,W,lb);x.fillRect(0,H-lb,W,lb);
-      if(c>0){x.save();x.globalAlpha=clamp(c*2)*clamp(2-c*2+.6);x.fillStyle='#fff';x.font=`${Math.min(14,W*.032)}px "Courier Prime",monospace`;x.textAlign='right';x.fillText('PRESENT DAY',W-24,H-lb-22);x.restore()}},
+      if(c>0){x.save();x.globalAlpha=clamp(c*2)*clamp(2-c*2+.6);x.fillStyle='#fff';x.font=`${Math.min(14,W*.032)}px "Courier Prime",monospace`;x.textAlign='right';x.fillText((window.I18N?window.I18N[window.LANG].ui.present:'PRESENT DAY'),W-24,H-lb-22);x.restore()}},
   };
 })();
 /* @@END@@ */

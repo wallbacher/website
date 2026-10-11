@@ -1,6 +1,6 @@
 """Builds the three Kleos story variants.
 Writes site pages to concepts/ (full HTML documents) and artifact copies to the scratch dir given as argv[1]."""
-import re, sys, pathlib, html
+import re, sys, pathlib, html, json
 
 ROOT = pathlib.Path(__file__).resolve().parent
 OUT_SITE = ROOT.parent
@@ -37,6 +37,43 @@ NARRATION = [
     "Eurovision Song Contest. A safety briefing on a set like the show itself. The crews walked in on fire.",
     "And now, your story. What will they hear about you?",
 ]
+
+# German is the default language. Swiss spelling (ss, no ß), formal "Sie".
+ACTS_DE = [
+    ("Prolog", "κλέος", "κλέος", "<b>kléos</b> · Altgriechisch. Ruhm, Ansehen. Wörtlich <i>das, was man hört</i>: die Geschichte, die man sich über Sie erzählt, lange nachdem Sie die Bühne verlassen haben."),
+    ("Akt I", "Die Helden", "Jeder Held hatte seine eigene Geschichte.", "Andere Taten, andere Lieder. Genau das machte jeden von ihnen unvergesslich."),
+    ("Akt II", "Ihre Marke", "Jede Marke auch.", "Darum arbeiten wir nie nach Schema F. Eine Vorlage lässt Sie aussehen wie alle anderen."),
+    ("Akt III · Zuhören", "Zuhören", "Zuerst hören wir zu.", "Wir recherchieren Ihre Marke, Ihr Produkt und die Menschen, die es nutzen, bis wir wissen, wie man Sie heute sieht."),
+    ("Akt IV · Finden", "Finden", "Dann graben wir nach dem, was nur Sie haben.", "Ihren USP. Wenn Ihre Geschichte auch zur Konkurrenz passen könnte, gehen die Leute zur Konkurrenz."),
+    ("Akt V · Erzählen", "Erzählen", "Dann erzählen wir sie so, dass man zuhören will.", "Wer gut unterhalten wird, hört mit den Ohren und mit dem Herzen zu. So bleibt eine Botschaft hängen."),
+    ("Heldentat · Orangina Schweiz", "Ein Kostüm", "Ein Kostüm. Eine ganze Figur.", "Kleines Budget, grosse Idee: eine Figur, die die Geschichte der Marke in kurzen, witzigen Clips für Social Media erzählt."),
+    ("Heldentat · Eurovision Song Contest", "Showfieber", "Ein Sicherheitsbriefing, das Lust auf die Show macht.", "Das Briefing für alle Delegationen und Crews, gedreht in einer Kulisse wie die Show selbst, mit Witzen für die Fans. Danach kannten alle die Regeln und kamen schon in Feststimmung in die Halle."),
+    ("Ihr Auftritt", "Ihre Geschichte", "Was wird man über Sie erzählen?", "Finden wir Ihr Kleos. Scrollen Sie weiter und erzählen Sie uns davon."),
+]
+NARRATION_DE = [
+    "Vor langer Zeit hatten die Griechen ein Wort für die Geschichte, die man sich über jemanden erzählt. <b>κλέος</b>, kléos: das, was man hört.",
+    "Jeder Held hatte sein eigenes Kleos. Andere Taten, andere Lieder.",
+    "Bei Marken ist es nicht anders. Eine Vorlage macht Sie austauschbar, darum verwenden wir keine.",
+    "Zuerst hören wir zu. Ihrer Marke, Ihrem Produkt, Ihren Leuten.",
+    "Dann graben wir, bis wir finden, was nur Sie haben. Ihren USP.",
+    "Dann erzählen wir es. Wer gut unterhalten wird, hört mit dem Herzen zu. So bleibt eine Botschaft hängen.",
+    "Orangina Schweiz. Ein Kostüm, eine Figur, eine ganze Markengeschichte in kurzen Clips.",
+    "Eurovision Song Contest. Ein Sicherheitsbriefing in einer Kulisse wie die Show selbst. Die Crews kamen voller Feuer in die Halle.",
+    "Und jetzt Ihre Geschichte. Was wird man über Sie erzählen?",
+]
+
+UI = {
+  "de": dict(contact="Kontakt", home="Kleos Entertainment, zurück zum Anfang", story="Die Geschichte von Kleos Entertainment in neun Szenen",
+             h2="Erzählen Sie uns Ihre Geschichte.", lead="Eine Marke, ein Produkt, ein Event, eine Botschaft, die ein Publikum braucht. Schreiben Sie uns, und wir beginnen mit Zuhören.",
+             email="E-Mail", copy="Kopieren", copied="Kopiert", selected="Markiert", name="Ihr Name", mail="Ihre E-Mail", msg="Ihre Geschichte",
+             ph="Was soll man über Sie hören?", send="Senden", newstory="Neue Geschichte", present="HEUTE",
+             note="Ihr Mail-Programm sollte sich mit der fertigen Nachricht öffnen. Falls nicht, schreiben Sie an {to}.", lang="Sprache"),
+  "en": dict(contact="Contact", home="Kleos Entertainment, back to the start", story="The story of Kleos Entertainment, in nine scenes",
+             h2="Tell us your story.", lead="A brand, a product, an event, a message that needs an audience. Write to us and we'll start by listening.",
+             email="Email", copy="Copy", copied="Copied", selected="Selected", name="Your name", mail="Your email", msg="Your story",
+             ph="What should people hear about you?", send="Send", newstory="New story", present="PRESENT DAY",
+             note="Your mail app should open with the message ready to send. If it doesn’t, write to {to}.", lang="Language"),
+}
 
 VARIANTS = {
   "stage": dict(
@@ -89,7 +126,29 @@ VARIANTS = {
   ),
 }
 
+I18N_RUNTIME = r"""
+(function(){
+  const pick=()=>{try{const q=new URLSearchParams(location.search).get('lang');if(q==='de'||q==='en')return q}catch(e){}
+    try{const v=localStorage.getItem('kleos-lang');if(v==='de'||v==='en')return v}catch(e){}return 'de'};
+  function apply(l){window.LANG=l;const D=window.I18N[l];document.documentElement.lang=l;
+    document.querySelectorAll('[data-i18n]').forEach(e=>e.textContent=D.ui[e.dataset.i18n]);
+    document.querySelectorAll('[data-i18n-aria]').forEach(e=>e.setAttribute('aria-label',D.ui[e.dataset.i18nAria]));
+    document.querySelectorAll('[data-i18n-ph]').forEach(e=>e.placeholder=D.ui[e.dataset.i18nPh]);
+    document.querySelectorAll('.card').forEach((c,i)=>{const a=D.acts[i];c.dataset.act=a.act;c.dataset.short=a.short;c.querySelector('.act').textContent=a.act;c.querySelector('h2').innerHTML=a.h2;c.querySelector('p').innerHTML=a.p});
+    document.querySelectorAll('[data-lang]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.lang===l));
+    const n=document.getElementById('form-note');if(n)n.textContent=''}
+  window.LANG='de';
+  document.addEventListener('DOMContentLoaded',()=>{});
+  const init=()=>{apply(pick());document.querySelectorAll('[data-lang]').forEach(b=>b.addEventListener('click',()=>{apply(b.dataset.lang);try{localStorage.setItem('kleos-lang',b.dataset.lang)}catch(e){}}))};
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+"""
+
 BASE_CSS = """
+.lang{display:flex;border:1.5px solid var(--line);border-radius:99px;overflow:hidden;background:color-mix(in srgb,var(--bg) 70%,transparent);backdrop-filter:blur(6px);pointer-events:auto}
+.lang button{font:inherit;font-size:.78rem;font-weight:700;letter-spacing:.08em;color:var(--muted);background:transparent;border:0;padding:.5rem .7rem;cursor:pointer}
+.lang button[aria-pressed="true"]{color:var(--bg);background:var(--fg)}
+.top nav{align-items:center}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.55}
@@ -135,22 +194,31 @@ footer{padding-inline:clamp(16px,6vw,96px);padding-block:24px 40px;color:var(--m
 """
 
 def page(v, doctype):
+    flash = v["theme"] == "FLASHBACK"
+    def acts(lang):
+        a, n = (ACTS_DE, NARRATION_DE) if lang == "de" else (ACTS, NARRATION)
+        return [dict(act=x[0], short=x[1], h2=x[2], p=(n[i] if flash else x[3])) for i, x in enumerate(a)]
+    data = {l: dict(ui=UI[l], acts=acts(l)) for l in ("de", "en")}
+    de, u = data["de"]["acts"], UI["de"]
     cards = []
-    for i, (act, short, h2, p) in enumerate(ACTS):
-        line = NARRATION[i] if v["theme"] == "FLASHBACK" else p
+    for i, c in enumerate(de):
         cls = "card prologue" if i == 0 else "card"
-        cards.append(f'<article class="{cls}" data-act="{html.escape(act)}" data-short="{html.escape(short)}"><span class="act">{act}</span><h2>{h2}</h2><p>{line}</p></article>')
+        cards.append(f'<article class="{cls}" data-act="{html.escape(c["act"])}" data-short="{html.escape(c["short"])}"><span class="act">{c["act"]}</span><h2>{c["h2"]}</h2><p>{c["p"]}</p></article>')
+    i18n_js = "window.I18N=" + json.dumps(data, ensure_ascii=False) + ";" + I18N_RUNTIME
     body = f"""<title>{v['title']}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?{v['fonts']}&display=swap">
 <style>{v['css']}{BASE_CSS}</style>
 
 <header class="top">
-  <a class="mark" href="#story" aria-label="Kleos Entertainment, back to the start">KLEOS<small>Entertainment</small></a>
-  <nav aria-label="Reach us"><a href="#contact">Contact</a></nav>
+  <a class="mark" href="#story" data-i18n-aria="home" aria-label="{u['home']}">KLEOS<small>Entertainment</small></a>
+  <nav aria-label="Menu">
+    <div class="lang" role="group" data-i18n-aria="lang" aria-label="{u['lang']}"><button type="button" data-lang="de" aria-pressed="true">DE</button><button type="button" data-lang="en" aria-pressed="false">EN</button></div>
+    <a href="#contact" data-i18n="contact">{u['contact']}</a>
+  </nav>
 </header>
 
-<section id="story" class="story" aria-label="The story of Kleos Entertainment, in nine scenes">
+<section id="story" class="story" data-i18n-aria="story" aria-label="{u['story']}">
   <div class="stage">
     <canvas id="world" aria-hidden="true"></canvas>
     <div class="cards">
@@ -160,31 +228,32 @@ def page(v, doctype):
   </div>
 </section>
 
-<section id="contact" class="contact" aria-label="Contact">
+<section id="contact" class="contact" data-i18n-aria="contact" aria-label="{u['contact']}">
   <div>
-    <h2>Tell us your story.</h2>
-    <p class="lead">A brand, a product, an event, a message that needs an audience. Write to us and we'll start by listening.</p>
+    <h2 data-i18n="h2">{u['h2']}</h2>
+    <p class="lead" data-i18n="lead">{u['lead']}</p>
     <div class="reach">
-      <div class="row"><span class="k">Email</span><span id="mail-text">{MAIL}</span><button class="chip" id="copy-mail" type="button" data-mail="{MAIL}">Copy</button></div>
+      <div class="row"><span class="k" data-i18n="email">{u['email']}</span><span id="mail-text">{MAIL}</span><button class="chip" id="copy-mail" type="button" data-mail="{MAIL}" data-i18n="copy">{u['copy']}</button></div>
     </div>
   </div>
   <form id="contact-form" data-to="{MAIL}" novalidate>
-    <label for="f-name">Your name<input id="f-name" name="name" autocomplete="name" required></label>
-    <label for="f-email">Your email<input id="f-email" name="email" type="email" autocomplete="email"></label>
-    <label for="f-msg">Your story<textarea id="f-msg" name="message" placeholder="What should people hear about you?"></textarea></label>
-    <button class="send" type="submit">Send</button>
+    <label for="f-name"><span data-i18n="name">{u['name']}</span><input id="f-name" name="name" autocomplete="name" required></label>
+    <label for="f-email"><span data-i18n="mail">{u['mail']}</span><input id="f-email" name="email" type="email" autocomplete="email"></label>
+    <label for="f-msg"><span data-i18n="msg">{u['msg']}</span><textarea id="f-msg" name="message" data-i18n-ph="ph" placeholder="{u['ph']}"></textarea></label>
+    <button class="send" type="submit" data-i18n="send">{u['send']}</button>
     <p id="form-note" aria-live="polite"></p>
   </form>
 </section>
 <footer><span>© 2026 Kleos Entertainment</span><span>kleos-entertainment.ch</span></footer>
 
+<script>{i18n_js}</script>
 <script>{theme_js(v['theme'])}</script>
 <script>{engine}</script>
 """
     if doctype:
         head, rest = body.split("<style>", 1)
         return f"""<!doctype html>
-<html lang="en">
+<html lang="de">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -202,4 +271,6 @@ for key, v in VARIANTS.items():
     if OUT_ART:
         OUT_ART.mkdir(parents=True, exist_ok=True)
         (OUT_ART / v["file"]).write_text(page(v, False))
+    if key == "stage":
+        (OUT_SITE.parent / "index.html").write_text(page(v, True))
     print("built", v["file"])

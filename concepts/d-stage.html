@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="de">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -17,6 +17,10 @@
 .card p b{color:var(--fg)}
 @media (max-width:640px){.card{top:72px}}
 
+.lang{display:flex;border:1.5px solid var(--line);border-radius:99px;overflow:hidden;background:color-mix(in srgb,var(--bg) 70%,transparent);backdrop-filter:blur(6px);pointer-events:auto}
+.lang button{font:inherit;font-size:.78rem;font-weight:700;letter-spacing:.08em;color:var(--muted);background:transparent;border:0;padding:.5rem .7rem;cursor:pointer}
+.lang button[aria-pressed="true"]{color:var(--bg);background:var(--fg)}
+.top nav{align-items:center}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.55}
@@ -65,38 +69,58 @@ footer{padding-inline:clamp(16px,6vw,96px);padding-block:24px 40px;color:var(--m
 
 
 <header class="top">
-  <a class="mark" href="#story" aria-label="Kleos Entertainment, back to the start">KLEOS<small>Entertainment</small></a>
-  <nav aria-label="Reach us"><a href="#contact">Contact</a></nav>
+  <a class="mark" href="#story" data-i18n-aria="home" aria-label="Kleos Entertainment, zurück zum Anfang">KLEOS<small>Entertainment</small></a>
+  <nav aria-label="Menu">
+    <div class="lang" role="group" data-i18n-aria="lang" aria-label="Sprache"><button type="button" data-lang="de" aria-pressed="true">DE</button><button type="button" data-lang="en" aria-pressed="false">EN</button></div>
+    <a href="#contact" data-i18n="contact">Kontakt</a>
+  </nav>
 </header>
 
-<section id="story" class="story" aria-label="The story of Kleos Entertainment, in nine scenes">
+<section id="story" class="story" data-i18n-aria="story" aria-label="Die Geschichte von Kleos Entertainment in neun Szenen">
   <div class="stage">
     <canvas id="world" aria-hidden="true"></canvas>
     <div class="cards">
-      <article class="card prologue" data-act="Prologue" data-short="κλέος"><span class="act">Prologue</span><h2>κλέος</h2><p><b>kléos</b> · Ancient Greek. Glory, renown. Literally <i>what is heard</i>: the story people tell about you, long after you leave the stage.</p></article><article class="card" data-act="Act I" data-short="The heroes"><span class="act">Act I</span><h2>Every hero had a story of their own.</h2><p>Different deeds, different songs. That is what made each of them unforgettable.</p></article><article class="card" data-act="Act II" data-short="Your brand"><span class="act">Act II</span><h2>So does every brand.</h2><p>Which is why we don't do cookie-cutter. A template makes you look like everyone else.</p></article><article class="card" data-act="Act III · Listen" data-short="Listen"><span class="act">Act III · Listen</span><h2>First, we listen.</h2><p>We research your brand, your product and the people who use it, until we know how they see you today.</p></article><article class="card" data-act="Act IV · Find" data-short="Find"><span class="act">Act IV · Find</span><h2>Then we dig for what only you have.</h2><p>Your USP. If your story could belong to a competitor, people will go to the competitor.</p></article><article class="card" data-act="Act V · Tell" data-short="Tell"><span class="act">Act V · Tell</span><h2>Then we tell it so people want to hear it.</h2><p>Entertain people and they listen with their ears and their hearts. That is how a message sticks.</p></article><article class="card" data-act="Deed · Orangina Switzerland" data-short="One costume"><span class="act">Deed · Orangina Switzerland</span><h2>One costume. A whole character.</h2><p>Small budget, big idea: a character who tells the brand's story in short, funny clips for social media.</p></article><article class="card" data-act="Deed · Eurovision Song Contest" data-short="Stage fever"><span class="act">Deed · Eurovision Song Contest</span><h2>A safety briefing with stage fever.</h2><p>The briefing for every delegation and crew, filmed on a set that feels like the show, with jokes for the fans. They learned the rules and walked in already fired up.</p></article><article class="card" data-act="Your turn" data-short="Your story"><span class="act">Your turn</span><h2>What will they hear about you?</h2><p>Let's find your kleos. Scroll on and tell us about it.</p></article>
+      <article class="card prologue" data-act="Prolog" data-short="κλέος"><span class="act">Prolog</span><h2>κλέος</h2><p><b>kléos</b> · Altgriechisch. Ruhm, Ansehen. Wörtlich <i>das, was man hört</i>: die Geschichte, die man sich über Sie erzählt, lange nachdem Sie die Bühne verlassen haben.</p></article><article class="card" data-act="Akt I" data-short="Die Helden"><span class="act">Akt I</span><h2>Jeder Held hatte seine eigene Geschichte.</h2><p>Andere Taten, andere Lieder. Genau das machte jeden von ihnen unvergesslich.</p></article><article class="card" data-act="Akt II" data-short="Ihre Marke"><span class="act">Akt II</span><h2>Jede Marke auch.</h2><p>Darum arbeiten wir nie nach Schema F. Eine Vorlage lässt Sie aussehen wie alle anderen.</p></article><article class="card" data-act="Akt III · Zuhören" data-short="Zuhören"><span class="act">Akt III · Zuhören</span><h2>Zuerst hören wir zu.</h2><p>Wir recherchieren Ihre Marke, Ihr Produkt und die Menschen, die es nutzen, bis wir wissen, wie man Sie heute sieht.</p></article><article class="card" data-act="Akt IV · Finden" data-short="Finden"><span class="act">Akt IV · Finden</span><h2>Dann graben wir nach dem, was nur Sie haben.</h2><p>Ihren USP. Wenn Ihre Geschichte auch zur Konkurrenz passen könnte, gehen die Leute zur Konkurrenz.</p></article><article class="card" data-act="Akt V · Erzählen" data-short="Erzählen"><span class="act">Akt V · Erzählen</span><h2>Dann erzählen wir sie so, dass man zuhören will.</h2><p>Wer gut unterhalten wird, hört mit den Ohren und mit dem Herzen zu. So bleibt eine Botschaft hängen.</p></article><article class="card" data-act="Heldentat · Orangina Schweiz" data-short="Ein Kostüm"><span class="act">Heldentat · Orangina Schweiz</span><h2>Ein Kostüm. Eine ganze Figur.</h2><p>Kleines Budget, grosse Idee: eine Figur, die die Geschichte der Marke in kurzen, witzigen Clips für Social Media erzählt.</p></article><article class="card" data-act="Heldentat · Eurovision Song Contest" data-short="Showfieber"><span class="act">Heldentat · Eurovision Song Contest</span><h2>Ein Sicherheitsbriefing, das Lust auf die Show macht.</h2><p>Das Briefing für alle Delegationen und Crews, gedreht in einer Kulisse wie die Show selbst, mit Witzen für die Fans. Danach kannten alle die Regeln und kamen schon in Feststimmung in die Halle.</p></article><article class="card" data-act="Ihr Auftritt" data-short="Ihre Geschichte"><span class="act">Ihr Auftritt</span><h2>Was wird man über Sie erzählen?</h2><p>Finden wir Ihr Kleos. Scrollen Sie weiter und erzählen Sie uns davon.</p></article>
     </div>
     <div class="progress" aria-hidden="true"><i id="bar"></i></div>
   </div>
 </section>
 
-<section id="contact" class="contact" aria-label="Contact">
+<section id="contact" class="contact" data-i18n-aria="contact" aria-label="Kontakt">
   <div>
-    <h2>Tell us your story.</h2>
-    <p class="lead">A brand, a product, an event, a message that needs an audience. Write to us and we'll start by listening.</p>
+    <h2 data-i18n="h2">Erzählen Sie uns Ihre Geschichte.</h2>
+    <p class="lead" data-i18n="lead">Eine Marke, ein Produkt, ein Event, eine Botschaft, die ein Publikum braucht. Schreiben Sie uns, und wir beginnen mit Zuhören.</p>
     <div class="reach">
-      <div class="row"><span class="k">Email</span><span id="mail-text">contact@kleos-entertainment.ch</span><button class="chip" id="copy-mail" type="button" data-mail="contact@kleos-entertainment.ch">Copy</button></div>
+      <div class="row"><span class="k" data-i18n="email">E-Mail</span><span id="mail-text">contact@kleos-entertainment.ch</span><button class="chip" id="copy-mail" type="button" data-mail="contact@kleos-entertainment.ch" data-i18n="copy">Kopieren</button></div>
     </div>
   </div>
   <form id="contact-form" data-to="contact@kleos-entertainment.ch" novalidate>
-    <label for="f-name">Your name<input id="f-name" name="name" autocomplete="name" required></label>
-    <label for="f-email">Your email<input id="f-email" name="email" type="email" autocomplete="email"></label>
-    <label for="f-msg">Your story<textarea id="f-msg" name="message" placeholder="What should people hear about you?"></textarea></label>
-    <button class="send" type="submit">Send</button>
+    <label for="f-name"><span data-i18n="name">Ihr Name</span><input id="f-name" name="name" autocomplete="name" required></label>
+    <label for="f-email"><span data-i18n="mail">Ihre E-Mail</span><input id="f-email" name="email" type="email" autocomplete="email"></label>
+    <label for="f-msg"><span data-i18n="msg">Ihre Geschichte</span><textarea id="f-msg" name="message" data-i18n-ph="ph" placeholder="Was soll man über Sie hören?"></textarea></label>
+    <button class="send" type="submit" data-i18n="send">Senden</button>
     <p id="form-note" aria-live="polite"></p>
   </form>
 </section>
 <footer><span>© 2026 Kleos Entertainment</span><span>kleos-entertainment.ch</span></footer>
 
+<script>window.I18N={"de": {"ui": {"contact": "Kontakt", "home": "Kleos Entertainment, zurück zum Anfang", "story": "Die Geschichte von Kleos Entertainment in neun Szenen", "h2": "Erzählen Sie uns Ihre Geschichte.", "lead": "Eine Marke, ein Produkt, ein Event, eine Botschaft, die ein Publikum braucht. Schreiben Sie uns, und wir beginnen mit Zuhören.", "email": "E-Mail", "copy": "Kopieren", "copied": "Kopiert", "selected": "Markiert", "name": "Ihr Name", "mail": "Ihre E-Mail", "msg": "Ihre Geschichte", "ph": "Was soll man über Sie hören?", "send": "Senden", "newstory": "Neue Geschichte", "present": "HEUTE", "note": "Ihr Mail-Programm sollte sich mit der fertigen Nachricht öffnen. Falls nicht, schreiben Sie an {to}.", "lang": "Sprache"}, "acts": [{"act": "Prolog", "short": "κλέος", "h2": "κλέος", "p": "<b>kléos</b> · Altgriechisch. Ruhm, Ansehen. Wörtlich <i>das, was man hört</i>: die Geschichte, die man sich über Sie erzählt, lange nachdem Sie die Bühne verlassen haben."}, {"act": "Akt I", "short": "Die Helden", "h2": "Jeder Held hatte seine eigene Geschichte.", "p": "Andere Taten, andere Lieder. Genau das machte jeden von ihnen unvergesslich."}, {"act": "Akt II", "short": "Ihre Marke", "h2": "Jede Marke auch.", "p": "Darum arbeiten wir nie nach Schema F. Eine Vorlage lässt Sie aussehen wie alle anderen."}, {"act": "Akt III · Zuhören", "short": "Zuhören", "h2": "Zuerst hören wir zu.", "p": "Wir recherchieren Ihre Marke, Ihr Produkt und die Menschen, die es nutzen, bis wir wissen, wie man Sie heute sieht."}, {"act": "Akt IV · Finden", "short": "Finden", "h2": "Dann graben wir nach dem, was nur Sie haben.", "p": "Ihren USP. Wenn Ihre Geschichte auch zur Konkurrenz passen könnte, gehen die Leute zur Konkurrenz."}, {"act": "Akt V · Erzählen", "short": "Erzählen", "h2": "Dann erzählen wir sie so, dass man zuhören will.", "p": "Wer gut unterhalten wird, hört mit den Ohren und mit dem Herzen zu. So bleibt eine Botschaft hängen."}, {"act": "Heldentat · Orangina Schweiz", "short": "Ein Kostüm", "h2": "Ein Kostüm. Eine ganze Figur.", "p": "Kleines Budget, grosse Idee: eine Figur, die die Geschichte der Marke in kurzen, witzigen Clips für Social Media erzählt."}, {"act": "Heldentat · Eurovision Song Contest", "short": "Showfieber", "h2": "Ein Sicherheitsbriefing, das Lust auf die Show macht.", "p": "Das Briefing für alle Delegationen und Crews, gedreht in einer Kulisse wie die Show selbst, mit Witzen für die Fans. Danach kannten alle die Regeln und kamen schon in Feststimmung in die Halle."}, {"act": "Ihr Auftritt", "short": "Ihre Geschichte", "h2": "Was wird man über Sie erzählen?", "p": "Finden wir Ihr Kleos. Scrollen Sie weiter und erzählen Sie uns davon."}]}, "en": {"ui": {"contact": "Contact", "home": "Kleos Entertainment, back to the start", "story": "The story of Kleos Entertainment, in nine scenes", "h2": "Tell us your story.", "lead": "A brand, a product, an event, a message that needs an audience. Write to us and we'll start by listening.", "email": "Email", "copy": "Copy", "copied": "Copied", "selected": "Selected", "name": "Your name", "mail": "Your email", "msg": "Your story", "ph": "What should people hear about you?", "send": "Send", "newstory": "New story", "present": "PRESENT DAY", "note": "Your mail app should open with the message ready to send. If it doesn’t, write to {to}.", "lang": "Language"}, "acts": [{"act": "Prologue", "short": "κλέος", "h2": "κλέος", "p": "<b>kléos</b> · Ancient Greek. Glory, renown. Literally <i>what is heard</i>: the story people tell about you, long after you leave the stage."}, {"act": "Act I", "short": "The heroes", "h2": "Every hero had a story of their own.", "p": "Different deeds, different songs. That is what made each of them unforgettable."}, {"act": "Act II", "short": "Your brand", "h2": "So does every brand.", "p": "Which is why we don't do cookie-cutter. A template makes you look like everyone else."}, {"act": "Act III · Listen", "short": "Listen", "h2": "First, we listen.", "p": "We research your brand, your product and the people who use it, until we know how they see you today."}, {"act": "Act IV · Find", "short": "Find", "h2": "Then we dig for what only you have.", "p": "Your USP. If your story could belong to a competitor, people will go to the competitor."}, {"act": "Act V · Tell", "short": "Tell", "h2": "Then we tell it so people want to hear it.", "p": "Entertain people and they listen with their ears and their hearts. That is how a message sticks."}, {"act": "Deed · Orangina Switzerland", "short": "One costume", "h2": "One costume. A whole character.", "p": "Small budget, big idea: a character who tells the brand's story in short, funny clips for social media."}, {"act": "Deed · Eurovision Song Contest", "short": "Stage fever", "h2": "A safety briefing with stage fever.", "p": "The briefing for every delegation and crew, filmed on a set that feels like the show, with jokes for the fans. They learned the rules and walked in already fired up."}, {"act": "Your turn", "short": "Your story", "h2": "What will they hear about you?", "p": "Let's find your kleos. Scroll on and tell us about it."}]}};
+(function(){
+  const pick=()=>{try{const q=new URLSearchParams(location.search).get('lang');if(q==='de'||q==='en')return q}catch(e){}
+    try{const v=localStorage.getItem('kleos-lang');if(v==='de'||v==='en')return v}catch(e){}return 'de'};
+  function apply(l){window.LANG=l;const D=window.I18N[l];document.documentElement.lang=l;
+    document.querySelectorAll('[data-i18n]').forEach(e=>e.textContent=D.ui[e.dataset.i18n]);
+    document.querySelectorAll('[data-i18n-aria]').forEach(e=>e.setAttribute('aria-label',D.ui[e.dataset.i18nAria]));
+    document.querySelectorAll('[data-i18n-ph]').forEach(e=>e.placeholder=D.ui[e.dataset.i18nPh]);
+    document.querySelectorAll('.card').forEach((c,i)=>{const a=D.acts[i];c.dataset.act=a.act;c.dataset.short=a.short;c.querySelector('.act').textContent=a.act;c.querySelector('h2').innerHTML=a.h2;c.querySelector('p').innerHTML=a.p});
+    document.querySelectorAll('[data-lang]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.lang===l));
+    const n=document.getElementById('form-note');if(n)n.textContent=''}
+  window.LANG='de';
+  document.addEventListener('DOMContentLoaded',()=>{});
+  const init=()=>{apply(pick());document.querySelectorAll('[data-lang]').forEach(b=>b.addEventListener('click',()=>{apply(b.dataset.lang);try{localStorage.setItem('kleos-lang',b.dataset.lang)}catch(e){}}))};
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
 <script>
 window.THEME=(function(){
   const cyc=['#3a2a7a','#5a1f6e','#1f4f66','#6b3a12','#1d4a7a','#6e1f3f','#6b4a10','#3a1f7a','#16505a'];
@@ -321,15 +345,16 @@ addEventListener('resize',resize);
 (document.fonts?document.fonts.ready:Promise.resolve()).then(resize);
 resize();requestAnimationFrame(frame);
 
+const L=k=>{try{return window.I18N[window.LANG].ui[k]}catch(e){return k}};
 /* ---------- contact form: opens the visitor's mail app with everything filled in ---------- */
 const form=document.getElementById('contact-form');
 if(form){form.addEventListener('submit',e=>{e.preventDefault();const d=new FormData(form);const to=form.dataset.to;
-  const subj=encodeURIComponent('Kleos · '+(d.get('name')||'New story'));
+  const subj=encodeURIComponent('Kleos · '+(d.get('name')||L('newstory')));
   const body=encodeURIComponent((d.get('message')||'')+'\n\n— '+(d.get('name')||'')+(d.get('email')?' · '+d.get('email'):''));
   location.href=`mailto:${to}?subject=${subj}&body=${body}`;
-  const n=document.getElementById('form-note');if(n)n.textContent='Your mail app should open with the message ready to send. If it doesn’t, write to '+to+'.';});}
+  const n=document.getElementById('form-note');if(n)n.textContent=L('note').replace('{to}',to);});}
 const copy=document.getElementById('copy-mail');
-if(copy)copy.addEventListener('click',async()=>{const v=copy.dataset.mail;try{await navigator.clipboard.writeText(v);copy.textContent='Copied'}catch(e){const r=document.createRange();r.selectNodeContents(document.getElementById('mail-text'));const sel=getSelection();sel.removeAllRanges();sel.addRange(r);copy.textContent='Selected'}setTimeout(()=>copy.textContent='Copy',1800)});
+if(copy)copy.addEventListener('click',async()=>{const v=copy.dataset.mail;try{await navigator.clipboard.writeText(v);copy.textContent=L('copied')}catch(e){const r=document.createRange();r.selectNodeContents(document.getElementById('mail-text'));const sel=getSelection();sel.removeAllRanges();sel.addRange(r);copy.textContent=L('selected')}setTimeout(()=>copy.textContent=L('copy'),1800)});
 })();
 </script>
 

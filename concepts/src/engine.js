@@ -191,13 +191,14 @@ addEventListener('resize',resize);
 (document.fonts?document.fonts.ready:Promise.resolve()).then(resize);
 resize();requestAnimationFrame(frame);
 
+const L=k=>{try{return window.I18N[window.LANG].ui[k]}catch(e){return k}};
 /* ---------- contact form: opens the visitor's mail app with everything filled in ---------- */
 const form=document.getElementById('contact-form');
 if(form){form.addEventListener('submit',e=>{e.preventDefault();const d=new FormData(form);const to=form.dataset.to;
-  const subj=encodeURIComponent('Kleos · '+(d.get('name')||'New story'));
+  const subj=encodeURIComponent('Kleos · '+(d.get('name')||L('newstory')));
   const body=encodeURIComponent((d.get('message')||'')+'\n\n— '+(d.get('name')||'')+(d.get('email')?' · '+d.get('email'):''));
   location.href=`mailto:${to}?subject=${subj}&body=${body}`;
-  const n=document.getElementById('form-note');if(n)n.textContent='Your mail app should open with the message ready to send. If it doesn’t, write to '+to+'.';});}
+  const n=document.getElementById('form-note');if(n)n.textContent=L('note').replace('{to}',to);});}
 const copy=document.getElementById('copy-mail');
-if(copy)copy.addEventListener('click',async()=>{const v=copy.dataset.mail;try{await navigator.clipboard.writeText(v);copy.textContent='Copied'}catch(e){const r=document.createRange();r.selectNodeContents(document.getElementById('mail-text'));const sel=getSelection();sel.removeAllRanges();sel.addRange(r);copy.textContent='Selected'}setTimeout(()=>copy.textContent='Copy',1800)});
+if(copy)copy.addEventListener('click',async()=>{const v=copy.dataset.mail;try{await navigator.clipboard.writeText(v);copy.textContent=L('copied')}catch(e){const r=document.createRange();r.selectNodeContents(document.getElementById('mail-text'));const sel=getSelection();sel.removeAllRanges();sel.addRange(r);copy.textContent=L('selected')}setTimeout(()=>copy.textContent=L('copy'),1800)});
 })();
