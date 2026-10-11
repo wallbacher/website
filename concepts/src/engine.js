@@ -192,13 +192,21 @@ addEventListener('resize',resize);
 resize();requestAnimationFrame(frame);
 
 const L=k=>{try{return window.I18N[window.LANG].ui[k]}catch(e){return k}};
-/* ---------- contact form: opens the visitor's mail app with everything filled in ---------- */
+/* ---------- contact form: sent through FormSubmit to the inbox; falls back to the visitor's mail app ---------- */
 const form=document.getElementById('contact-form');
-if(form){form.addEventListener('submit',e=>{e.preventDefault();const d=new FormData(form);const to=form.dataset.to;
-  const subj=encodeURIComponent('Kleos · '+(d.get('name')||L('newstory')));
-  const body=encodeURIComponent((d.get('message')||'')+'\n\n— '+(d.get('name')||'')+(d.get('email')?' · '+d.get('email'):''));
-  location.href=`mailto:${to}?subject=${subj}&body=${body}`;
-  const n=document.getElementById('form-note');if(n)n.textContent=L('note').replace('{to}',to);});}
+if(form){form.addEventListener('submit',async e=>{e.preventDefault();
+  const d=new FormData(form),to=form.dataset.to,note=document.getElementById('form-note'),btn=form.querySelector('.send');
+  const name=(d.get('name')||'').trim(),email=(d.get('email')||'').trim(),msg=(d.get('message')||'').trim();
+  if(!name||!email||!msg||!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){note.textContent=L('missing');(!name?form.elements.name:!email||!/@/.test(email)?form.elements.email:form.elements.message).focus();return}
+  if(d.get('_honey'))return;
+  btn.disabled=true;btn.textContent=L('sending');note.textContent='';
+  const mailto=()=>{const subj=encodeURIComponent('Kleos · '+name),body=encodeURIComponent(msg+'\n\n— '+name+' · '+email);location.href=`mailto:${to}?subject=${subj}&body=${body}`;note.textContent=L('note').replace('{to}',to)};
+  try{const r=await fetch('https://formsubmit.co/ajax/'+to,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},
+      body:JSON.stringify({name,email,message:msg,_subject:'Kleos Website · '+name,_replyto:email,_template:'table',_captcha:'false',language:window.LANG})});
+    const j=await r.json().catch(()=>({}));
+    if(r.ok&&String(j.success)!=='false'){form.reset();note.textContent=L('thanks')}else throw new Error(j.message||r.status)}
+  catch(err){mailto()}
+  finally{btn.disabled=false;btn.textContent=L('send')}});}
 const copy=document.getElementById('copy-mail');
 if(copy)copy.addEventListener('click',async()=>{const v=copy.dataset.mail;try{await navigator.clipboard.writeText(v);copy.textContent=L('copied')}catch(e){const r=document.createRange();r.selectNodeContents(document.getElementById('mail-text'));const sel=getSelection();sel.removeAllRanges();sel.addRange(r);copy.textContent=L('selected')}setTimeout(()=>copy.textContent=L('copy'),1800)});
 })();

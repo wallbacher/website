@@ -67,12 +67,12 @@ UI = {
              h2="Erzählen Sie uns Ihre Geschichte.", lead="Eine Marke, ein Produkt, ein Event, eine Botschaft, die ein Publikum braucht. Schreiben Sie uns, und wir beginnen mit Zuhören.",
              email="E-Mail", copy="Kopieren", copied="Kopiert", selected="Markiert", name="Ihr Name", mail="Ihre E-Mail", msg="Ihre Geschichte",
              ph="Was soll man über Sie hören?", send="Senden", newstory="Neue Geschichte", present="HEUTE",
-             note="Ihr Mail-Programm sollte sich mit der fertigen Nachricht öffnen. Falls nicht, schreiben Sie an {to}.", lang="Sprache"),
+             note="Das hat nicht geklappt, darum öffnet sich jetzt Ihr Mail-Programm. Sie können auch direkt an {to} schreiben.", thanks="Danke! Ihre Nachricht ist bei uns angekommen. Wir melden uns bald.", sending="Wird gesendet …", missing="Bitte Name, eine gültige E-Mail und Ihre Nachricht ausfüllen.", lang="Sprache"),
   "en": dict(contact="Contact", home="Kleos Entertainment, back to the start", story="The story of Kleos Entertainment, in nine scenes",
              h2="Tell us your story.", lead="A brand, a product, an event, a message that needs an audience. Write to us and we'll start by listening.",
              email="Email", copy="Copy", copied="Copied", selected="Selected", name="Your name", mail="Your email", msg="Your story",
              ph="What should people hear about you?", send="Send", newstory="New story", present="PRESENT DAY",
-             note="Your mail app should open with the message ready to send. If it doesn’t, write to {to}.", lang="Language"),
+             note="That didn’t work, so your mail app is opening instead. You can also write to {to} directly.", thanks="Thank you! Your message has reached us. We’ll be in touch soon.", sending="Sending …", missing="Please fill in your name, a valid email and your message.", lang="Language"),
 }
 
 VARIANTS = {
@@ -189,6 +189,7 @@ textarea{min-height:9rem;resize:vertical}
 input:focus,textarea:focus{outline:none;border-color:var(--accent)}
 .send{font:inherit;font-weight:700;font-size:1rem;color:var(--bg);background:var(--accent);border:0;border-radius:99px;padding:1rem 1.6rem;cursor:pointer;justify-self:start}
 .send:hover{background:var(--accent2)}
+.send:disabled{opacity:.6;cursor:wait}
 #form-note{min-height:1.4em;margin:0;color:var(--muted);font-size:.92rem}
 footer{padding-inline:clamp(16px,6vw,96px);padding-block:24px 40px;color:var(--muted);font-size:.85rem;max-width:1200px;margin:0 auto;border-top:1.5px solid var(--line);display:flex;flex-wrap:wrap;justify-content:space-between;gap:.5rem}
 """
@@ -238,8 +239,9 @@ def page(v, doctype):
   </div>
   <form id="contact-form" data-to="{MAIL}" novalidate>
     <label for="f-name"><span data-i18n="name">{u['name']}</span><input id="f-name" name="name" autocomplete="name" required></label>
-    <label for="f-email"><span data-i18n="mail">{u['mail']}</span><input id="f-email" name="email" type="email" autocomplete="email"></label>
-    <label for="f-msg"><span data-i18n="msg">{u['msg']}</span><textarea id="f-msg" name="message" data-i18n-ph="ph" placeholder="{u['ph']}"></textarea></label>
+    <label for="f-email"><span data-i18n="mail">{u['mail']}</span><input id="f-email" name="email" type="email" autocomplete="email" required></label>
+    <label for="f-msg"><span data-i18n="msg">{u['msg']}</span><textarea id="f-msg" name="message" data-i18n-ph="ph" placeholder="{u['ph']}" required></textarea></label>
+    <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
     <button class="send" type="submit" data-i18n="send">{u['send']}</button>
     <p id="form-note" aria-live="polite"></p>
   </form>
