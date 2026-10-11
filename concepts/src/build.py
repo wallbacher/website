@@ -7,7 +7,6 @@ OUT_SITE = ROOT.parent
 OUT_ART = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else None
 
 MAIL = "contact@kleos-entertainment.ch"
-INSTAGRAM = "https://www.instagram.com/"  # TODO: replace with the real profile URL
 
 engine = (ROOT / "engine.js").read_text()
 themes = (ROOT / "themes.js").read_text()
@@ -148,7 +147,7 @@ def page(v, doctype):
 
 <header class="top">
   <a class="mark" href="#story" aria-label="Kleos Entertainment, back to the start">KLEOS<small>Entertainment</small></a>
-  <nav aria-label="Reach us"><a href="{INSTAGRAM}" target="_blank" rel="noopener">Instagram</a><a href="#contact">Contact</a></nav>
+  <nav aria-label="Reach us"><a href="#contact">Contact</a></nav>
 </header>
 
 <section id="story" class="story" aria-label="The story of Kleos Entertainment, in nine scenes">
@@ -167,7 +166,6 @@ def page(v, doctype):
     <p class="lead">A brand, a product, an event, a message that needs an audience. Write to us and we'll start by listening.</p>
     <div class="reach">
       <div class="row"><span class="k">Email</span><span id="mail-text">{MAIL}</span><button class="chip" id="copy-mail" type="button" data-mail="{MAIL}">Copy</button></div>
-      <div class="row"><span class="k">Instagram</span><a href="{INSTAGRAM}" target="_blank" rel="noopener">Follow Kleos on Instagram ↗</a></div>
     </div>
   </div>
   <form id="contact-form" data-to="{MAIL}" novalidate>
