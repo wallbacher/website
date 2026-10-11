@@ -6,7 +6,7 @@ ROOT = pathlib.Path(__file__).resolve().parent
 OUT_SITE = ROOT.parent
 OUT_ART = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else None
 
-MAIL = "contact@kleos-entertainment.ch"
+MAIL = "info@kleos-entertainment.ch"
 
 engine = (ROOT / "engine.js").read_text()
 themes = (ROOT / "themes.js").read_text()
