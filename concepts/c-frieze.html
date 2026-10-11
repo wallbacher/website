@@ -1,0 +1,134 @@
+<title>Kleos Frieze</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=GFS+Didot&family=Spectral:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+/* Layout: one long black-figure vase painting. Scrolling down walks a hero sideways through the story, panel by panel */
+:root{
+  --clay:#c9692f; --clay-deep:#a9521f; --slip:#1a120c; --bone:#f3e2c8; --line:#5a2c12;
+  --f-display:"Marcellus","Trajan Pro",Georgia,serif;
+  --f-greek:"GFS Didot",Georgia,serif;
+  --f-body:"Spectral",Georgia,serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{background:var(--clay);color:var(--slip)}
+body{font-family:var(--f-body);font-size:1.1rem;line-height:1.55}
+:focus-visible{outline:2px solid var(--slip);outline-offset:3px}
+.meander{height:26px;background-color:var(--slip);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='52' height='26'%3E%3Cpath d='M0 23h40V3H8v14h22V9H18' fill='none' stroke='%23c9692f' stroke-width='3'/%3E%3C/svg%3E");background-size:52px 26px}
+.scroller{height:var(--len,600vh);position:relative}
+.sticky{position:sticky;top:env(safe-area-inset-top,0px);height:100vh;height:100dvh;overflow:hidden;display:grid;grid-template-rows:26px 1fr 110px 26px}
+.track{display:flex;height:100%;will-change:transform}
+.panel{flex:0 0 min(86vw,760px);height:100%;padding:clamp(20px,4vw,48px) clamp(16px,4vw,48px);border-right:3px solid var(--slip);display:flex;flex-direction:column;justify-content:center;gap:1rem;position:relative;min-width:0}
+.panel:first-child{flex-basis:min(96vw,900px)}
+.k{font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;font-family:var(--f-display)}
+h1,h2{font-family:var(--f-display);font-weight:400;margin:0;line-height:1;text-wrap:balance}
+h1{font-family:var(--f-greek);font-size:clamp(5rem,16vw,10rem);line-height:.85}
+h2{font-size:clamp(2.2rem,5.5vw,3.8rem)}
+.panel p{margin:0;max-width:40ch}
+.big{font-size:clamp(1.25rem,2.5vw,1.6rem);line-height:1.4}
+.panel svg{width:min(100%,320px);height:auto}
+.panel svg *{fill:var(--slip)}
+.panel svg .inc{fill:none;stroke:var(--clay);stroke-width:2}
+.ground{position:relative;border-top:3px solid var(--slip);background:var(--clay-deep)}
+#runner{position:absolute;inset:0;width:100%;height:100%}
+.progress{position:absolute;left:16px;bottom:10px;font-family:var(--f-display);font-size:.8rem;letter-spacing:.16em;color:var(--slip)}
+.btn{align-self:flex-start;font-family:var(--f-display);letter-spacing:.14em;text-transform:uppercase;font-size:.9rem;color:var(--bone);background:var(--slip);padding:.95rem 1.5rem;text-decoration:none;border:0}
+.btn:hover{color:var(--clay)}
+.cue{position:absolute;right:24px;bottom:24px;font-family:var(--f-display);letter-spacing:.14em;font-size:.8rem;text-transform:uppercase;animation:nudge 1.6s ease-in-out infinite}
+@keyframes nudge{50%{transform:translateX(8px)}}
+@media (prefers-reduced-motion:reduce){
+  .scroller{height:auto}.sticky{position:static;height:auto;display:block}.track{flex-direction:column;transform:none!important}
+  .panel{flex-basis:auto;border-right:0;border-bottom:3px solid var(--slip);padding-block:56px}.ground,.cue{display:none}
+}
+</style>
+
+<div class="scroller" id="scroller">
+  <div class="sticky">
+    <div class="meander" aria-hidden="true"></div>
+    <div class="track" id="track">
+      <section class="panel" aria-label="Definition">
+        <span class="k">Kleos Entertainment</span>
+        <h1>κλέος</h1>
+        <p class="big"><b>kléos</b> · Ancient Greek. Glory, renown. Literally <i>what is heard</i>: the story told about a hero, passed on to the generations after.</p>
+        <span class="cue" aria-hidden="true">Scroll to walk →</span>
+      </section>
+      <section class="panel" aria-label="Every story is unique">
+        <svg viewBox="0 0 320 150" aria-hidden="true"><circle cx="50" cy="30" r="14"/><path d="M36 48h28l10 60H26z"/><circle cx="160" cy="30" r="14"/><path d="M146 48h28l18 60h-64z"/><path d="M190 60l40-30 6 8-40 30z"/><circle cx="270" cy="30" r="14"/><path d="M256 48h28l6 60h-40z"/><circle cx="270" cy="80" r="22"/><circle class="inc" cx="270" cy="80" r="14"/></svg>
+        <span class="k">I · The heroes</span>
+        <h2>No two heroes had the same story.</h2>
+        <p>Achilles, Odysseus, Herakles. Each one was remembered for a deed that was only theirs, told in a way that fit them.</p>
+      </section>
+      <section class="panel" aria-label="Brands">
+        <span class="k">II · Your brand</span>
+        <h2>Neither do brands.</h2>
+        <p class="big">That is why we don't do cookie-cutter. We look for the story only you can tell.</p>
+      </section>
+      <section class="panel" aria-label="Listen">
+        <svg viewBox="0 0 320 150" aria-hidden="true"><circle cx="110" cy="40" r="16"/><path d="M94 60h32l14 70H80z"/><path d="M136 34c14 0 24 10 24 22" class="inc" style="stroke:var(--slip);stroke-width:5"/><path d="M150 26c22 0 36 16 36 34" class="inc" style="stroke:var(--slip);stroke-width:5"/><path d="M164 18c30 0 48 22 48 46" class="inc" style="stroke:var(--slip);stroke-width:5"/></svg>
+        <span class="k">III · Listen</span>
+        <h2>First, we listen.</h2>
+        <p>We research the brand, the product and its relationship with the people who use it.</p>
+      </section>
+      <section class="panel" aria-label="Find">
+        <svg viewBox="0 0 320 150" aria-hidden="true"><path d="M160 10l14 40h42l-34 24 13 40-35-25-35 25 13-40-34-24h42z"/></svg>
+        <span class="k">IV · Find</span>
+        <h2>Then we find what sets you apart.</h2>
+        <p>Your USP. If your story could belong to a competitor, people will go to the competitor.</p>
+      </section>
+      <section class="panel" aria-label="Tell">
+        <span class="k">V · Tell</span>
+        <h2>Then we tell it so people want to hear it.</h2>
+        <p class="big">Entertain people and they listen with their ears and their hearts. That is how a message sticks.</p>
+      </section>
+      <section class="panel" aria-label="Orangina Switzerland">
+        <svg viewBox="0 0 320 150" aria-hidden="true"><circle cx="90" cy="80" r="46"/><circle class="inc" cx="74" cy="70" r="6"/><circle class="inc" cx="106" cy="70" r="6"/><path class="inc" d="M72 94q18 14 36 0"/><path d="M60 126l-10 20h14zM120 126l10 20h-14z"/><rect x="190" y="20" width="44" height="80" rx="6"/><rect x="246" y="40" width="44" height="80" rx="6"/></svg>
+        <span class="k">Deed · Orangina Switzerland</span>
+        <h2>One costume. A whole character.</h2>
+        <p>Little budget, big idea: a character who tells the brand's story in short, funny social clips.</p>
+      </section>
+      <section class="panel" aria-label="Eurovision Song Contest">
+        <svg viewBox="0 0 320 150" aria-hidden="true"><path d="M20 140h280v8H20z"/><path d="M60 0l30 140H70zM160 0l12 140h-24zM260 0l-10 140h20z" opacity=".55"/><circle cx="160" cy="70" r="14"/><path d="M146 88h28l10 52h-48z"/></svg>
+        <span class="k">Deed · Eurovision Song Contest</span>
+        <h2>A safety briefing with stage fever.</h2>
+        <p>Shot on a set that feels like the show, with jokes for the fans. Delegations and crews learned the rules and walked into the venue already fired up.</p>
+      </section>
+      <section class="panel" aria-label="Contact">
+        <span class="k">Your turn</span>
+        <h2>What will they say about you?</h2>
+        <p class="big">Let's find your kleos.</p>
+        <a class="btn" href="#scroller">Start the story</a>
+      </section>
+    </div>
+    <div class="ground" aria-hidden="true"><canvas id="runner"></canvas><span class="progress" id="prog">I / IX</span></div>
+    <div class="meander" aria-hidden="true"></div>
+  </div>
+</div>
+
+<script>
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const scroller=document.getElementById('scroller'),track=document.getElementById('track'),prog=document.getElementById('prog');
+const cv=document.getElementById('runner'),x=cv.getContext('2d');
+const roman=['I','II','III','IV','V','VI','VII','VIII','IX'];
+let dist=0,p=0,phase=0,lastP=0;
+function layout(){dist=Math.max(0,track.scrollWidth-innerWidth);scroller.style.setProperty('--len',(innerHeight+dist)+'px');const d=devicePixelRatio||1;cv.width=cv.clientWidth*d;cv.height=cv.clientHeight*d;x.setTransform(d,0,0,d,0,0);update()}
+function update(){if(reduce)return;const top=-scroller.getBoundingClientRect().top;p=Math.min(1,Math.max(0,top/Math.max(1,dist)));track.style.transform=`translateX(${-p*dist}px)`;
+  const n=track.children.length;prog.textContent=roman[Math.min(n-1,Math.round(p*(n-1)))]+' / '+roman[n-1];
+  phase+=(p-lastP)*160;lastP=p;draw()}
+// a black-figure runner whose stride follows the scroll
+function draw(){const w=cv.clientWidth,h=cv.clientHeight;x.clearRect(0,0,w,h);const slip=getComputedStyle(document.documentElement).getPropertyValue('--slip');
+  x.fillStyle=slip;x.strokeStyle=slip;x.lineCap='round';
+  const cx=40+p*(w-80),gy=h-14,s=Math.sin(phase),c=Math.cos(phase);
+  const hip=[cx,gy-44],sh=[cx+4,gy-74];
+  x.lineWidth=9;
+  const leg=(a)=>{const kx=hip[0]+Math.sin(a)*16,ky=hip[1]+18,fx=kx+Math.sin(a-0.8)*14,fy=gy-Math.max(0,Math.cos(a))*6;x.beginPath();x.moveTo(...hip);x.lineTo(kx,ky);x.lineTo(fx,fy);x.stroke()};
+  leg(s*1.1);leg(-s*1.1);
+  x.lineWidth=12;x.beginPath();x.moveTo(...hip);x.lineTo(...sh);x.stroke();
+  x.lineWidth=7;const arm=(a)=>{x.beginPath();x.moveTo(...sh);x.lineTo(sh[0]+Math.sin(a)*16,sh[1]+16);x.lineTo(sh[0]+Math.sin(a)*16+10,sh[1]+6);x.stroke()};arm(-s);arm(s);
+  x.beginPath();x.arc(sh[0]+3,sh[1]-14,10,0,7);x.fill();
+  // crest of the helmet
+  x.lineWidth=4;x.beginPath();x.moveTo(sh[0]-6,sh[1]-24);x.quadraticCurveTo(sh[0]+4,sh[1]-34,sh[0]+16,sh[1]-26);x.stroke();
+  // milestones for each panel
+  const n=track.children.length;x.lineWidth=2;for(let i=0;i<n;i++){const mx=40+i/(n-1)*(w-80);x.beginPath();x.moveTo(mx,gy+4);x.lineTo(mx,gy-6);x.stroke()}}
+addEventListener('scroll',update,{passive:true});addEventListener('resize',layout);
+document.fonts?.ready.then(layout);layout();
+</script>

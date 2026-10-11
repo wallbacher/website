@@ -1,0 +1,135 @@
+<title>Kleos Echo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;800;900&family=Instrument+Sans:wght@400;500;600&family=GFS+Didot&display=swap">
+<style>
+/* Layout: a dark stage. Every touch sends out sound waves; the story is read as lines that light up like a spoken script */
+:root{
+  --night:#130d1c; --stage:#1d1530; --glow:#f5c46b; --rose:#ff7a8a; --text:#efe8f7; --dim:#8a7fa3;
+  --f-display:"Big Shoulders Display",Impact,"Arial Narrow",sans-serif;
+  --f-body:"Instrument Sans",system-ui,sans-serif;
+  --f-greek:"GFS Didot",Georgia,serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--night);color:var(--text);font-family:var(--f-body);font-size:1.05rem;line-height:1.6;overflow-x:hidden}
+.wrap{padding-inline:clamp(16px,5vw,72px)}
+:focus-visible{outline:2px solid var(--glow);outline-offset:3px}
+
+.hero{position:relative;height:clamp(480px,78vh,760px);overflow:hidden;touch-action:pan-y;cursor:crosshair}
+#waves{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hero-in{position:relative;z-index:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;padding-block:0 clamp(28px,6vw,64px);pointer-events:none}
+.eyebrow{font-size:.8rem;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+h1{font-family:var(--f-display);font-weight:900;font-size:clamp(5rem,22vw,15rem);line-height:.82;margin:.1em 0 0;letter-spacing:-.01em;text-transform:uppercase}
+.def{display:flex;flex-wrap:wrap;gap:.2rem 1rem;align-items:baseline;margin-top:1rem}
+.def .g{font-family:var(--f-greek);font-size:clamp(1.8rem,4vw,2.6rem);color:var(--glow)}
+.def p{margin:0;max-width:44ch;font-size:clamp(1.05rem,2vw,1.25rem)}
+.hint{position:absolute;right:clamp(16px,5vw,72px);top:24px;z-index:2;display:flex;gap:.6rem;align-items:center;font-size:.8rem;color:var(--dim);letter-spacing:.06em}
+.hint button{font:inherit;color:var(--night);background:var(--glow);border:0;border-radius:99px;padding:.45rem .9rem;cursor:pointer;font-weight:600}
+
+/* Script: lines light up as you scroll */
+.script{padding-block:clamp(64px,12vw,140px)}
+.line{font-family:var(--f-display);font-weight:800;text-transform:uppercase;font-size:clamp(2.4rem,8vw,6rem);line-height:.95;margin:0 0 .35em;color:color-mix(in srgb,var(--text) 22%,var(--night));transition:color .5s;text-wrap:balance}
+.line.lit{color:var(--text)}
+.line.lit em{color:var(--rose);font-style:normal}
+
+/* Method as three faders */
+.mix{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:20px;padding-block:20px 100px}
+.ch{background:var(--stage);border-radius:4px;padding:1.4rem;display:grid;grid-template-rows:auto 140px auto;gap:1rem;min-width:0}
+.ch h3{font-family:var(--f-display);font-weight:800;font-size:2.4rem;margin:0;line-height:1;text-transform:uppercase}
+.ch h3 small{display:block;font-family:var(--f-body);font-size:.75rem;letter-spacing:.16em;color:var(--dim);font-weight:500}
+.ch p{margin:0;color:var(--dim);font-size:.98rem}
+.meter{display:flex;gap:5px;align-items:flex-end;height:140px}
+.meter i{flex:1;background:var(--glow);border-radius:2px;height:20%;opacity:.85;transition:height .12s}
+.ch:nth-child(2) .meter i{background:var(--rose)}
+.ch:nth-child(3) .meter i{background:var(--text)}
+
+/* Cases under a spotlight */
+.cases{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:20px;padding-block:0 100px}
+.case{position:relative;min-height:340px;padding:clamp(1.4rem,3vw,2.2rem);background:var(--stage);border-radius:4px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;min-width:0}
+.case::before{content:"";position:absolute;inset:0;background:radial-gradient(260px circle at var(--mx,50%) var(--my,30%),color-mix(in srgb,var(--glow) 32%,transparent),transparent 70%);transition:opacity .3s}
+.case>*{position:relative}
+.case .tag{font-size:.75rem;letter-spacing:.16em;text-transform:uppercase;color:var(--glow)}
+.case h3{font-family:var(--f-display);font-weight:800;font-size:clamp(2rem,4.5vw,3.2rem);line-height:.95;margin:.3rem 0 .8rem;text-transform:uppercase}
+.case p{margin:0;max-width:46ch;color:var(--text);opacity:.85}
+.end{padding-block:40px 120px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:1.5rem}
+.end h2{font-family:var(--f-display);font-weight:900;font-size:clamp(3rem,10vw,7rem);line-height:.85;margin:0;text-transform:uppercase}
+.end h2 span{color:var(--glow)}
+.btn{font-family:var(--f-body);font-weight:600;font-size:1rem;color:var(--night);background:var(--glow);padding:1rem 1.6rem;border-radius:99px;text-decoration:none}
+.btn:hover{background:var(--rose)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<section class="hero" id="hero" aria-label="Kleos">
+  <canvas id="waves" aria-hidden="true"></canvas>
+  <div class="hint">Move or tap to make some noise <button id="snd" type="button" aria-pressed="false">Sound off</button></div>
+  <div class="hero-in wrap">
+    <div class="eyebrow">Kleos Entertainment</div>
+    <h1>Kleos</h1>
+    <div class="def"><span class="g">κλέος</span><p>Ancient Greek for glory. Literally, <em>what is heard</em> about you.</p></div>
+  </div>
+</section>
+
+<section class="script wrap" aria-label="What we believe">
+  <p class="line">Entertain people</p>
+  <p class="line">and they listen</p>
+  <p class="line">with their ears</p>
+  <p class="line">and their <em>hearts.</em></p>
+  <p class="line">Every hero had</p>
+  <p class="line">a story of their own.</p>
+  <p class="line">So does <em>your brand.</em></p>
+</section>
+
+<section class="wrap" aria-label="How we work">
+  <div class="mix">
+    <div class="ch"><h3><small>Step 1</small>Listen</h3><div class="meter" data-v="0"></div><p>Deep research into your brand, your product and the people who use it.</p></div>
+    <div class="ch"><h3><small>Step 2</small>Find</h3><div class="meter" data-v="1"></div><p>What you have that others don't. Your USP. No cookie-cutter solutions.</p></div>
+    <div class="ch"><h3><small>Step 3</small>Tell</h3><div class="meter" data-v="2"></div><p>A story your audience wants to hear, on social, on your site, on stage.</p></div>
+  </div>
+</section>
+
+<section class="wrap" aria-label="Work">
+  <div class="cases">
+    <article class="case"><span class="tag">Short-form social</span><h3>Orangina Switzerland</h3><p>Small budget, one costume. We built a character around it who tells the brand's story in a fun way, clip after clip.</p></article>
+    <article class="case"><span class="tag">Event film</span><h3>Eurovision Song Contest</h3><p>A health and safety briefing for every delegation and crew, shot on a set that feels like the show itself. Rules learned, jokes landed, everyone walked in ready.</p></article>
+  </div>
+  <div class="end"><h2>Make them<br><span>hear you.</span></h2><a class="btn" href="#hero">Start your kleos</a></div>
+</section>
+
+<script>
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const hero=document.getElementById('hero'),cv=document.getElementById('waves'),x=cv.getContext('2d');
+let W,H,rings=[],t=0,last=0;
+function size(){const d=devicePixelRatio||1;W=hero.clientWidth;H=hero.clientHeight;cv.width=W*d;cv.height=H*d;x.setTransform(d,0,0,d,0,0)}
+size();addEventListener('resize',size);
+const cols=[css('--glow'),css('--rose'),css('--text')];
+function ring(px,py,big){rings.push({x:px,y:py,r:0,v:big?3.2:1.8,a:1,c:cols[Math.floor(Math.random()*3)]});if(rings.length>60)rings.shift();ping(big)}
+// sound: a soft tone per wave, only after the viewer turns it on
+let ac=null,on=false;const btn=document.getElementById('snd');
+btn.addEventListener('click',()=>{on=!on;btn.textContent=on?'Sound on':'Sound off';btn.setAttribute('aria-pressed',on);if(on&&!ac){try{ac=new AudioContext()}catch(e){}}});
+function ping(big){if(!on||!ac)return;const o=ac.createOscillator(),g=ac.createGain();const notes=[392,440,523,587,659];o.frequency.value=notes[Math.floor(Math.random()*5)]*(big?.5:1);o.type='sine';g.gain.setValueAtTime(.0001,ac.currentTime);g.gain.exponentialRampToValueAtTime(.12,ac.currentTime+.02);g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+1.2);o.connect(g).connect(ac.destination);o.start();o.stop(ac.currentTime+1.3)}
+hero.addEventListener('pointermove',e=>{const n=performance.now();if(n-last>140){last=n;const b=hero.getBoundingClientRect();ring(e.clientX-b.left,e.clientY-b.top,false)}});
+hero.addEventListener('pointerdown',e=>{const b=hero.getBoundingClientRect();ring(e.clientX-b.left,e.clientY-b.top,true)});
+// ambient: the word itself keeps sending waves from the centre
+function frame(){x.clearRect(0,0,W,H);t++;
+  if(t%70===0)rings.push({x:W*.5+Math.sin(t*.01)*W*.25,y:H*.38,r:0,v:1.4,a:.7,c:cols[0]});
+  for(const r of rings){r.r+=r.v;r.a*=.985;x.strokeStyle=r.c;x.globalAlpha=r.a*.8;x.lineWidth=1.5;x.beginPath();x.arc(r.x,r.y,r.r,0,7);x.stroke();
+    x.globalAlpha=r.a*.25;x.beginPath();x.arc(r.x,r.y,r.r*.7,0,7);x.stroke()}
+  x.globalAlpha=1;rings=rings.filter(r=>r.a>.03);
+  if(!reduce)requestAnimationFrame(frame)}
+frame();if(reduce){for(let i=1;i<6;i++){x.strokeStyle=cols[0];x.globalAlpha=.5/i;x.beginPath();x.arc(W*.5,H*.38,i*60,0,7);x.stroke()}}
+
+// script lines light up once they cross the middle of the screen
+const lines=[...document.querySelectorAll('.line')];
+function lit(){const mid=innerHeight*.62;lines.forEach(l=>l.classList.toggle('lit',l.getBoundingClientRect().top<mid))}
+addEventListener('scroll',lit,{passive:true});lit();
+
+// meters bounce like a mixing desk; louder on hover
+document.querySelectorAll('.meter').forEach(m=>{for(let i=0;i<14;i++)m.appendChild(document.createElement('i'))});
+const chans=[...document.querySelectorAll('.ch')];let hot=-1;chans.forEach((c,i)=>{c.addEventListener('pointerenter',()=>hot=i);c.addEventListener('pointerleave',()=>hot=-1)});
+function meters(ts){chans.forEach((c,ci)=>{const g=hot===ci?1:.55;c.querySelectorAll('.meter i').forEach((b,i)=>{const v=Math.abs(Math.sin(ts/400+i*.6+ci*2))*.6+Math.abs(Math.sin(ts/170+i))*.4;b.style.height=(12+v*88*g)+'%'})});if(!reduce)requestAnimationFrame(meters)}
+requestAnimationFrame(meters);
+
+// spotlight follows the pointer on case cards
+document.querySelectorAll('.case').forEach(c=>c.addEventListener('pointermove',e=>{const b=c.getBoundingClientRect();c.style.setProperty('--mx',(e.clientX-b.left)+'px');c.style.setProperty('--my',(e.clientY-b.top)+'px')}));
+</script>

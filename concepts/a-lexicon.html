@@ -1,0 +1,175 @@
+<title>Kleos Lexicon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..700&family=GFS+Didot&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a single dictionary entry that unfolds — headword, etymology tree, numbered senses, usage examples */
+:root{
+  --paper:#eef0f3; --ink:#141a2b; --muted:#5b6478; --rule:#c9ceda; --accent:#1f3fd6; --accent-soft:#dfe4fb;
+  --f-display:"Bodoni Moda","Didot","Times New Roman",serif;
+  --f-greek:"GFS Didot","Bodoni Moda",serif;
+  --f-body:"Newsreader",Georgia,serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#0f1220;--ink:#e8eaf2;--muted:#9aa2b8;--rule:#2a3048;--accent:#8ea2ff;--accent-soft:#1c2347;color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#0f1220;--ink:#e8eaf2;--muted:#9aa2b8;--rule:#2a3048;--accent:#8ea2ff;--accent-soft:#1c2347;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:1.125rem;line-height:1.6;padding-inline:clamp(16px,5vw,64px);padding-block:0}
+main{max-width:980px;margin:0 auto}
+.mono{font-family:var(--f-mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+/* Headword */
+.entry{padding-block:clamp(48px,10vw,120px) 40px;border-bottom:1px solid var(--rule)}
+.head{display:flex;flex-wrap:wrap;align-items:baseline;gap:.2em 1.2rem}
+.word{font-family:var(--f-greek);font-size:clamp(4.5rem,17vw,11rem);line-height:.9;margin:0;font-weight:400}
+.word span{display:inline-block;animation:ink .9s cubic-bezier(.2,.7,.2,1) both}
+.word span:nth-child(2){animation-delay:.12s}.word span:nth-child(3){animation-delay:.24s}.word span:nth-child(4){animation-delay:.36s}.word span:nth-child(5){animation-delay:.48s}
+@keyframes ink{from{filter:blur(8px);transform:translateY(.12em)}to{filter:none;transform:none}}
+.translit{font-family:var(--f-display);font-style:italic;font-size:clamp(1.6rem,4vw,2.4rem)}
+.pron{font-family:var(--f-mono);color:var(--muted);font-size:1rem}
+.pron button{all:unset;cursor:pointer;color:var(--accent);margin-left:.4em}
+.gloss{margin:1.4rem 0 0;font-size:clamp(1.3rem,2.6vw,1.75rem);max-width:30ch;text-wrap:balance}
+.gloss em{color:var(--accent);font-style:italic}
+
+/* Etymology tree */
+.ety{padding-block:56px;border-bottom:1px solid var(--rule)}
+.ety h2,.senses h2,.usage h2{font-family:var(--f-mono);font-weight:500;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 1.5rem}
+.tree-wrap{overflow-x:auto}
+.tree{display:block;width:100%;min-width:620px;height:auto}
+.tree .line{fill:none;stroke:var(--rule);stroke-width:1.5;stroke-dasharray:400;stroke-dashoffset:0;transition:stroke .3s}
+.tree.draw .line{animation:draw 1.6s ease-out both}
+@keyframes draw{from{stroke-dashoffset:400}to{stroke-dashoffset:0}}
+.tree text{fill:var(--ink);font-family:var(--f-body)}
+.tree .root{font-family:var(--f-mono);font-size:15px;fill:var(--muted)}
+.tree .core{font-family:var(--f-greek);font-size:30px}
+.tree .leaf{cursor:pointer}
+.tree .leaf .w{font-family:var(--f-display);font-style:italic;font-size:20px}
+.tree .leaf .m{font-size:13px;fill:var(--muted)}
+.tree .leaf:hover .w,.tree .leaf:focus .w,.tree .leaf.on .w{fill:var(--accent)}
+.tree .line.on{stroke:var(--accent);stroke-width:2}
+.note{margin:1.2rem 0 0;color:var(--muted);font-size:1rem;min-height:3.2em;max-width:62ch}
+.note b{color:var(--ink);font-weight:500}
+
+/* Senses = the method */
+.senses{padding-block:56px;border-bottom:1px solid var(--rule)}
+.sense{display:grid;grid-template-columns:3.5rem 1fr;gap:0 1rem;padding-block:1.4rem;border-top:1px solid var(--rule);cursor:default}
+.sense:first-of-type{border-top:0}
+.sense .n{font-family:var(--f-display);font-size:2.6rem;line-height:1;color:var(--accent)}
+.sense h3{font-family:var(--f-display);font-weight:600;font-size:clamp(1.5rem,3.4vw,2.2rem);margin:0;line-height:1.15}
+.sense p{margin:.4rem 0 0;max-width:56ch;color:var(--muted)}
+.sense .bar{grid-column:2;height:2px;background:var(--accent-soft);margin-top:1rem;overflow:hidden}
+.sense .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width 1.1s cubic-bezier(.2,.7,.2,1)}
+.sense:hover .bar i,.sense.seen .bar i{width:100%}
+
+/* Usage examples = cases */
+.usage{padding-block:56px}
+.cases{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:24px}
+.case{position:relative;border:1px solid var(--rule);padding:1.6rem;min-width:0;overflow:hidden;background:var(--paper)}
+.case .ex{font-family:var(--f-display);font-style:italic;font-size:1.35rem;line-height:1.35;margin:0 0 1rem;text-wrap:balance}
+.case .ex u{text-decoration:none;color:var(--accent)}
+.case p{margin:0;color:var(--muted);font-size:1rem}
+.case canvas{display:block;width:100%;height:160px;margin-bottom:1.2rem;background:var(--accent-soft)}
+.cta{margin:64px 0 0;padding-block:48px 80px;border-top:1px solid var(--rule);display:flex;flex-wrap:wrap;gap:1rem 2rem;align-items:end;justify-content:space-between}
+.cta h2{font-family:var(--f-display);font-size:clamp(2.2rem,6vw,4rem);line-height:1;margin:0;font-weight:500;text-wrap:balance}
+.cta h2 em{color:var(--accent)}
+.btn{font-family:var(--f-mono);font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;color:var(--paper);background:var(--ink);padding:1rem 1.6rem;text-decoration:none;border:0;cursor:pointer}
+.btn:hover{background:var(--accent)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<main>
+  <section class="entry" aria-label="Definition">
+    <div class="mono">Kleos Entertainment · Lexicon entry no. 1</div>
+    <div class="head">
+      <h1 class="word" aria-label="κλέος"><span>κ</span><span>λ</span><span>έ</span><span>ο</span><span>ς</span></h1>
+      <div>
+        <div class="translit">kléos</div>
+        <div class="pron">/ˈkle.os/ · n., Ancient Greek <button id="say" type="button" aria-label="Hear it">▶ hear</button></div>
+      </div>
+    </div>
+    <p class="gloss">Glory. Renown. Literally <em>“what is heard”</em>: the story people tell about you, long after you have left the room.</p>
+  </section>
+
+  <section class="ety" aria-label="Etymology">
+    <h2>Etymology · tap a word</h2>
+    <div class="tree-wrap">
+      <svg class="tree" id="tree" viewBox="0 0 900 330" role="img" aria-label="Etymology tree from the root ḱlew-, to hear">
+        <text class="root" x="450" y="28" text-anchor="middle">*ḱlew- · “to hear”</text>
+        <path class="line" data-k="0" d="M450 40 C450 80 450 80 450 110"/>
+        <text class="core" x="450" y="148" text-anchor="middle">κλέος</text>
+        <path class="line" data-k="1" d="M450 160 C450 210 90 200 90 250"/>
+        <path class="line" data-k="2" d="M450 160 C450 210 270 200 270 250"/>
+        <path class="line" data-k="3" d="M450 160 C450 210 450 200 450 250"/>
+        <path class="line" data-k="4" d="M450 160 C450 210 630 200 630 250"/>
+        <path class="line" data-k="5" d="M450 160 C450 210 810 200 810 250"/>
+        <g class="leaf" data-k="1" tabindex="0"><text class="w" x="90" y="276" text-anchor="middle">Kleopatra</text><text class="m" x="90" y="298" text-anchor="middle">glory of the father</text></g>
+        <g class="leaf" data-k="2" tabindex="0"><text class="w" x="270" y="276" text-anchor="middle">Herakles</text><text class="m" x="270" y="298" text-anchor="middle">glory of Hera</text></g>
+        <g class="leaf" data-k="3" tabindex="0"><text class="w" x="450" y="276" text-anchor="middle">Klio</text><text class="m" x="450" y="298" text-anchor="middle">muse of history</text></g>
+        <g class="leaf" data-k="4" tabindex="0"><text class="w" x="630" y="276" text-anchor="middle">sláva</text><text class="m" x="630" y="298" text-anchor="middle">Slavic: glory</text></g>
+        <g class="leaf" data-k="5" tabindex="0"><text class="w" x="810" y="276" text-anchor="middle">loud</text><text class="m" x="810" y="298" text-anchor="middle">English, same root</text></g>
+      </svg>
+    </div>
+    <p class="note" id="note" aria-live="polite">One root, <b>to hear</b>. Every hero in the old songs had a kleos of their own: a different deed, a different story, told their own way. Achilles traded a long life for <b>kléos áphthiton</b>, glory that never fades.</p>
+  </section>
+
+  <section class="senses" aria-label="How we work">
+    <h2>Senses · how we earn it for you</h2>
+    <div class="sense"><div class="n">1</div><div><h3>Listen first.</h3><p>We research your brand, your product and the people who use it, until we know how they see you today.</p></div><div class="bar"><i></i></div></div>
+    <div class="sense"><div class="n">2</div><div><h3>Find what only you have.</h3><p>Your USP. If the story could belong to a competitor, people will buy from the competitor. So we dig until it can only be yours.</p></div><div class="bar"><i></i></div></div>
+    <div class="sense"><div class="n">3</div><div><h3>Tell it so people want to hear it.</h3><p>Entertain people and they listen with their ears and their hearts. That is how a message sticks.</p></div><div class="bar"><i></i></div></div>
+  </section>
+
+  <section class="usage" aria-label="Work">
+    <h2>Usage · used in a sentence</h2>
+    <div class="cases">
+      <article class="case">
+        <canvas id="c1" aria-hidden="true"></canvas>
+        <p class="ex">“One costume, a small budget, and <u>a character</u> who told the whole brand story.”</p>
+        <p><b>Orangina Switzerland.</b> We built a character around a costume and let him tell the brand's story in short-form social content.</p>
+      </article>
+      <article class="case">
+        <canvas id="c2" aria-hidden="true"></canvas>
+        <p class="ex">“A safety briefing <u>nobody wanted to skip</u>.”</p>
+        <p><b>Eurovision Song Contest.</b> The health and safety briefing for delegations and crews, filmed on a set that looks and feels like Eurovision, with jokes. People walked into the venue already on fire.</p>
+      </article>
+    </div>
+    <div class="cta">
+      <h2>What will they hear<br>about <em>you</em>?</h2>
+      <a class="btn" href="#top">Start your kleos</a>
+    </div>
+  </section>
+</main>
+
+<script>
+// Pronunciation via speech synthesis (works where available)
+document.getElementById('say').addEventListener('click',()=>{try{const u=new SpeechSynthesisUtterance('kleh-os');u.rate=.7;speechSynthesis.speak(u)}catch(e){}});
+
+// Tree: draw on view, explain on tap
+const tree=document.getElementById('tree'),note=document.getElementById('note');
+const notes={1:'<b>Kleopatra</b>: kleos + patēr. Her name literally means “glory of the father”.',2:'<b>Herakles</b>: “the glory of Hera”. Even the strongest hero is named after a story.',3:'<b>Klio</b>, muse of history. Her job was to make deeds famous, to make sure they were heard.',4:'<b>Sláva</b>: the same root travelled north and became the Slavic word for glory.',5:'<b>Loud</b>: in English the root kept only the sound. Kleos is what is heard.'};
+const lines=[...tree.querySelectorAll('.line')];
+tree.querySelectorAll('.leaf').forEach(g=>{
+  const k=g.dataset.k,act=()=>{tree.querySelectorAll('.on').forEach(e=>e.classList.remove('on'));g.classList.add('on');lines.forEach(l=>{if(l.dataset.k==k||l.dataset.k==0)l.classList.add('on')});note.innerHTML=notes[k]};
+  g.addEventListener('click',act);g.addEventListener('mouseenter',act);g.addEventListener('focus',act);
+  g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();act()}});
+});
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add(e.target===tree?'draw':'seen');io.unobserve(e.target)}}),{threshold:.4});
+io.observe(tree);document.querySelectorAll('.sense').forEach(s=>io.observe(s));
+
+// Case canvases: small looping illustrations drawn in the accent ink
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function color(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()}
+function setup(id,draw){const c=document.getElementById(id),x=c.getContext('2d');function size(){const r=c.getBoundingClientRect(),d=devicePixelRatio||1;c.width=r.width*d;c.height=r.height*d;x.setTransform(d,0,0,d,0,0)}size();addEventListener('resize',size);let t=0;(function f(){const r=c.getBoundingClientRect();x.clearRect(0,0,r.width,r.height);draw(x,r.width,r.height,t);t+=1/60;if(!reduce)requestAnimationFrame(f)})()}
+// Orangina-ish: a bouncing round character with a little hop and phone frames
+setup('c1',(x,w,h,t)=>{const a=color('--accent'),i=color('--ink');const cx=w/2,hop=Math.abs(Math.sin(t*3))*22,cy=h-40-hop;
+  x.strokeStyle=i;x.lineWidth=1.5;for(let k=-1;k<=1;k++){const fx=cx+k*110-22;x.strokeRect(fx,18,44,h-36)}
+  x.fillStyle=a;x.beginPath();x.ellipse(cx,cy,26,26-hop*.15,0,0,7);x.fill();
+  x.fillStyle=color('--paper');x.beginPath();x.arc(cx-8,cy-5,3.5,0,7);x.arc(cx+8,cy-5,3.5,0,7);x.fill();
+  x.strokeStyle=color('--paper');x.lineWidth=2;x.beginPath();x.arc(cx,cy+4,8,.2,Math.PI-.2);x.stroke();
+  x.strokeStyle=i;x.beginPath();x.moveTo(cx-40,h-14);x.lineTo(cx+40,h-14);x.stroke()});
+// Eurovision-ish: stage with sweeping lights and a heart-shaped beat
+setup('c2',(x,w,h,t)=>{const a=color('--accent'),i=color('--ink');x.globalAlpha=.35;for(let k=0;k<4;k++){const ang=Math.sin(t*1.3+k*1.6)*.6,sx=w*(.2+k*.2);x.fillStyle=a;x.beginPath();x.moveTo(sx,0);x.lineTo(sx+Math.sin(ang)*h-26,h);x.lineTo(sx+Math.sin(ang)*h+26,h);x.fill()}
+  x.globalAlpha=1;const s=1+Math.max(0,Math.sin(t*5))*.15;x.save();x.translate(w/2,h/2+6);x.scale(s,s);x.fillStyle=i;x.beginPath();x.ellipse(0,-14,11,14,0,0,7);x.fill();x.fillRect(-2.5,0,5,26);x.strokeStyle=i;x.lineWidth=2.5;x.beginPath();x.arc(0,-6,16,.1,Math.PI-.1);x.stroke();x.restore();
+  x.strokeStyle=i;x.lineWidth=1.5;x.beginPath();x.moveTo(0,h-10);x.lineTo(w,h-10);x.stroke()});
+</script>
